@@ -1,5 +1,6 @@
 import torch
 
+
 def get_available_devices():
     """Get IDs of all available GPUs.
     Returns:

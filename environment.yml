@@ -56,4 +56,4 @@ dependencies:
     - transformers==4.5.1
     - urllib3==1.26.4
     - wcwidth==0.2.5
-prefix: /home/sri/miniconda3/envs/gpt
+prefix: gpt

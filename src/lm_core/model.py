@@ -18,7 +18,8 @@ class GPTLM():
         self.model.eval()
 
     def get_probabilities(self, raw_text, top_k=40):
-        inputs = self.tokenizer(raw_text, return_tensors="pt").to(self.device
+
+        inputs = self.tokenizer(raw_text, return_tensors="pt", truncation= True, max_length = 1024).to(self.device
                                                                   )
         # add input_seq as labels to predict probabilities for each timestep
         logits = self.model(**inputs, labels=inputs['input_ids'])  # (1, input_size, vocab_size)
