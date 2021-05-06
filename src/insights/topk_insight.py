@@ -58,20 +58,20 @@ def analyse_text(articles: List, filters=None, probs_plot=False):
                     if flag:
                         if rank <= 10:
                             top_10_cnt += 1
-                            word_dict_10[outputs['bpe_strings'][idx + 1]] = 1 - probs
+                            word_dict_10[outputs['bpe_strings'][idx + 1]] = probs
                             # TODO: can include wordcloud for this too.
                             probs_10.append(outputs['pred_topk'][idx][0][1])
                         elif rank <= 100:
                             top_100_cnt += 1
-                            word_dict_100[outputs['bpe_strings'][idx + 1]] = 1 - probs
+                            word_dict_100[outputs['bpe_strings'][idx + 1]] = probs
                             probs_100.append(outputs['pred_topk'][idx][0][1])
                         elif rank <= 1000:
                             top_1000_cnt += 1
-                            word_dict_1000[outputs['bpe_strings'][idx + 1]] = 1 - probs
+                            word_dict_1000[outputs['bpe_strings'][idx + 1]] = probs
                             probs_1000.append(outputs['pred_topk'][idx][0][1])
                         else:
                             top_x_cnt += 1
-                            word_dict_x[outputs['bpe_strings'][idx + 1]] = 1 - probs
+                            word_dict_x[outputs['bpe_strings'][idx + 1]] = probs
                             probs_x.append(outputs['pred_topk'][idx][0][1])
 
     data = {'top_10': top_10_cnt, 'top_100': top_100_cnt, 'top_1000': top_1000_cnt, 'top_x': top_x_cnt}
