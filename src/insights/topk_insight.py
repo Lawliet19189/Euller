@@ -5,11 +5,14 @@ import string
 from src.lm_core import GPTLM
 from .utils import plot_topk, draw_wordcloud, scatter_plot
 
+import streamlit as st
+
 nlp = spacy.load("en_core_web_sm")
 gpt = GPTLM()
 
 
-def analyse_text(articles: List, filters=None, probs_plot=False):
+def analyse_text(articles: List, filters=None, probs_plot=False, starting_idx=0 ,
+                 path="data/"):
     # from nltk.corpus import stopwords
 
     ################
@@ -43,12 +46,12 @@ def analyse_text(articles: List, filters=None, probs_plot=False):
 
             np_list = [str(token) for token in doc if token.tag_[:2] == "NN"]
 
-        for sentence in article_list:
-        #for sentence in [article]:
+        #for sentence in article_list:
+        for sentence in [article]:
             if len(sentence.split(" ")) > 5:
                 text = gpt.tokenizer.bos_token + " " + sentence
                 outputs = gpt.get_probabilities(text, top_k=1000)
-                for idx, (rank, probs) in enumerate(outputs['true_topk']):
+                for idx, (rank, probs) in enumerate(outputs['true_topk'][starting_idx:]):
                     flag = True
                     if filters=="ents" and (outputs['bpe_strings'][idx + 1] not in ent_list): # or outputs['bpe_strings'][idx + 1] not in np_list):
                         flag = False
@@ -75,12 +78,13 @@ def analyse_text(articles: List, filters=None, probs_plot=False):
                             probs_x.append(outputs['pred_topk'][idx][0][1])
 
     data = {'top_10': top_10_cnt, 'top_100': top_100_cnt, 'top_1000': top_1000_cnt, 'top_x': top_x_cnt}
-    plot_topk(data)
-    draw_wordcloud(word_dict_10, word_dict_100, word_dict_1000, word_dict_x)
+    plot_topk(data, path=path)
+    draw_wordcloud(word_dict_10, word_dict_100, word_dict_1000, word_dict_x, path=path)
 
     if probs_plot:
-        scatter_plot(probs_10)
-        scatter_plot(probs_100)
-        scatter_plot(probs_1000)
-        scatter_plot(probs_x)
+        col1, col2, col3, col4 = st.beta_columns(4)
+        scatter_plot(probs_10, col1, path=path+"scatter_col1.jpg")
+        scatter_plot(probs_100, col2, path=path+"scatter_col2.jpg")
+        scatter_plot(probs_1000, col3, path=path+"scatter_col3.jpg")
+        scatter_plot(probs_x, col4, path=path+"scatter_col4.jpg")
         #scatter_plot(probs_10, probs_100, probs_1000, probs_x)
