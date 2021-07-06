@@ -17,7 +17,7 @@ class GPTLM():
         self.model.to(self.device)
         self.model.eval()
 
-    def get_probabilities(self, raw_text, top_k=40):
+    def get_probabilities(self, raw_text, top_k=1000):
 
         inputs = self.tokenizer(raw_text, return_tensors="pt", truncation= True, max_length = 1024).to(self.device
                                                                   )
