@@ -35,13 +35,20 @@ def main():
     else:
         path = "data/"
 
-
+    st.header("You can also pick an precomputed experiment to see some good charts!")
+    experiment_list = ["100 ADM articles - ents + NP filtered"]
+    experiment = st.selectbox("Select Experiment:", options=[None] + experiment_list,
+                              index=0)
     if dataset in dataset_list:
         st.sidebar.text("Show pre-computed results, if exists?")
         yes = st.sidebar.checkbox("yes")
         no = st.sidebar.checkbox("no")
-    if st.sidebar.button('Analyse Text'):
-        if dataset in dataset_list:
+    if st.sidebar.button('Analyse Text') or st.button('Show Experiment results!'):
+        if dataset in dataset_list or experiment!=None:
+            if experiment!=None:
+                if experiment_list.index(experiment) == 0:
+                    path = "data/ADM_tickets/" + str(10) + "_ents_0_"
+                    yes, no = True, False
             if Path(path + "top_k.jpg").is_file():
                 if yes:
                     with st.spinner("Fetching results..."):

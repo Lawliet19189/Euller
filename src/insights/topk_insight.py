@@ -32,7 +32,7 @@ def analyse_text(articles: List, filters=None, probs_plot=False, starting_idx=0 
     top_x_cnt, word_dict_x, probs_x = 0, {}, []
 
     for article in articles:
-        article_list = article.split("\n")
+        article_list = article.split("\n\n")
 
         # sen = ""
         # for s in article_list:
@@ -46,8 +46,8 @@ def analyse_text(articles: List, filters=None, probs_plot=False, starting_idx=0 
 
             np_list = [str(token) for token in doc if token.tag_[:2] == "NN"]
 
-        #for sentence in article_list:
-        for sentence in [article]:
+        for sentence in article_list:
+        #for sentence in [article]:
             if len(sentence.split(" ")) > 5:
                 text = gpt.tokenizer.bos_token + " " + sentence
                 outputs = gpt.get_probabilities(text, top_k=1000)
@@ -72,7 +72,7 @@ def analyse_text(articles: List, filters=None, probs_plot=False, starting_idx=0 
                             top_1000_cnt += 1
                             word_dict_1000[outputs['bpe_strings'][idx + 1]] = probs
                             probs_1000.append(outputs['pred_topk'][idx][0][1])
-                        else:
+                        elif rank>1000:
                             top_x_cnt += 1
                             word_dict_x[outputs['bpe_strings'][idx + 1]] = probs
                             probs_x.append(outputs['pred_topk'][idx][0][1])
